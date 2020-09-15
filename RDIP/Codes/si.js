@@ -28,56 +28,88 @@ function language(){
     else{
         corpus=hincorp;
     }
-    if(document.getElementById("lang").value=="english"){
-        corpus=engcorp;
-    }
-    else{
-        corpus=hincorp;
-    }
     index=Math.floor(Math.random()*corpus.length);
     sentence=corpus[index][0];
     words=sentence.split(" ");
     console.log(words);
- reform(words);
-}
-function reform(words){
-    division=document.getElementById("w_buttons");
-    division.innerHTML="";
-
     for(i=0;i<words.length;i++){
         ind=Math.floor(Math.random()*words.length);
         temp=words[ind];
         words[ind]=words[i];
         words[i]=temp;
     }
-      but=[];
-    sentence="";
-
+    reform(words,index,corpus);
+}
+function checksentence(sentence,index,corpus){
+    for(i=0;i<corpus[index].length;i++){
+        if(sentence==corpus[index][i]){
+            return true;
+        }
+    }
+    return false;
+}
+function reform(words,index,corpus){
+    division=document.getElementById("w_buttons");
     two_buttons=document.getElementById("c_buttons");
+    ending=document.getElementById("ending");
+
+    but=[];
+    sentence="";
+    
+    division.innerHTML="";
     two_buttons.innerHTML="";
+    ending.innerHTML="";
+    document.getElementById("formed").innerHTML="";
 
     reform_button=document.createElement("input");
     reform_button.type="button";
     reform_button.value="Reform the sentence";
     reform_button.style.display="inline";
-    document.getElementById("demo").innerHTML=sentence;
+    reform_button.style.margin="0px 5px";
 
+    check_button=document.createElement("input");
+    check_button.type="button";
+    check_button.value="Check correctness of the sentence";
+    check_button.style.display="inline";
+    check_button.style.margin="0px 5px";
+
+    document.getElementById("formedsentence").innerHTML=sentence;
     for(i=0;i<words.length;i++){
         but[i]=document.createElement("input");
         but[i].type="button";
         but[i].value=words[i];
         but[i].style.display="inline";
         but[i].style.margin="0px 5px";
-         but[i].onclick=function(){
+        but[i].onclick=function(){
             sentence+=this.value+" ";
-            document.getElementById("demo").innerHTML=sentence;
+            document.getElementById("formedsentence").innerHTML=sentence;
             this.style.display="none";
             two_buttons.appendChild(reform_button);
             reform_button.onclick=function(){
-                reform(words);
+                reform(words,index,corpus);
             };
+            if(sentence.split(" ").length==words.length+1){
+                two_buttons.appendChild(check_button);
+                check_button.onclick=function(){
+                    if(checksentence(sentence.trim(),index,corpus)){
+                        mssg=document.createElement("p");
+                        mssg.innerHTML="Right answer!!!<br>";
+                        ending.appendChild(mssg);
+                    }
+                    else{
+                        mssg=document.createElement("p");
+                        mssg.innerHTML="Wrong answer!!!<br>";
+                        ending.appendChild(mssg);
+                        crrct=document.createElement("input");
+                        crrct.type="button";
+                        crrct.value="GET CORRECT SENTENCE";
+                        ending.appendChild(crrct);
+                    }
+                };
+            }
+            document.getElementById("formed").innerHTML="<b>Formed Sentence</b>(after selecting words)";
         };
-
         division.appendChild(but[i]);
+
     }
 }
