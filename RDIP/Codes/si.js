@@ -53,6 +53,11 @@ function reform(words,index,corpus){
     two_buttons=document.getElementById("c_buttons");
     ending=document.getElementById("ending");
 
+    ans="";
+    for(i=0;i<corpus[index].length;i++){
+        ans+=corpus[index][i]+"<br>";
+    }
+
     but=[];
     sentence="";
     
@@ -73,6 +78,10 @@ function reform(words,index,corpus){
     check_button.style.display="inline";
     check_button.style.margin="0px 5px";
 
+    crrct=document.createElement("input");
+    crrct.type="button";
+    crrct.value="GET CORRECT SENTENCE";
+
     document.getElementById("formedsentence").innerHTML=sentence;
     for(i=0;i<words.length;i++){
         but[i]=document.createElement("input");
@@ -89,6 +98,7 @@ function reform(words,index,corpus){
                 reform(words,index,corpus);
             };
             if(sentence.split(" ").length==words.length+1){
+
                 two_buttons.appendChild(check_button);
                 check_button.onclick=function(){
                     if(checksentence(sentence.trim(),index,corpus)){
@@ -100,9 +110,6 @@ function reform(words,index,corpus){
                         mssg=document.createElement("p");
                         mssg.innerHTML="Wrong answer!!!<br>";
                         ending.appendChild(mssg);
-                        crrct=document.createElement("input");
-                        crrct.type="button";
-                        crrct.value="GET CORRECT SENTENCE";
                         ending.appendChild(crrct);
                     }
                 };
@@ -110,6 +117,17 @@ function reform(words,index,corpus){
             document.getElementById("formed").innerHTML="<b>Formed Sentence</b>(after selecting words)";
         };
         division.appendChild(but[i]);
-
     }
+    crrct.onclick=function(){
+        if(crrct.value=="GET CORRECT SENTENCE" || crrct.value=="GET ANSWERS"){
+            answer=document.createElement("p");
+            answer.innerHTML=ans;
+            ending.appendChild(answer);
+            crrct.value="Hide The correct sentence";
+        }
+        else{
+            answer.innerHTML="";
+            crrct.value="GET ANSWERS";
+        }
+    };
 }
